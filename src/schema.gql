@@ -7,7 +7,7 @@ type ClassroomType {
   classroom: String!
   academicyear: Float!
   homeroomTeacher: String!
-  students: [StudentType!]!
+  students: [StudentType!]
 }
 
 type GradelevelType {
@@ -38,8 +38,9 @@ type StudentType {
 
 type Query {
   hello: String!
-  students(search: String, gradelevelid: Int): [StudentType!]!
+  students(search: String, gradelevelid: Int, classroomid: Int): [StudentType!]!
   student(studentid: ID!): StudentType!
+  studentsWithoutClassroom: [StudentType!]!
   classrooms: [ClassroomType!]!
   classroom(classroomid: ID!): ClassroomType!
   academicYears: [Float!]!
@@ -55,6 +56,8 @@ type Mutation {
   createClassroom(input: CreateClassroomInput!): ClassroomType!
   updateClassroom(input: UpdateClassroomInput!): ClassroomType!
   deleteClassroom(classroomid: Int!): ClassroomType!
+  addStudentToClassroom(classroomid: Int!, studentid: Int!): ClassroomType!
+  removeStudentFromClassroom(classroomid: Int!, studentid: Int!): ClassroomType!
 }
 
 input CreateStudentInput {

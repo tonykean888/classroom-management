@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { StudentClassroom } from '../student-classroom/student-classroom.entity';
-
+import { Student } from '../student/student.entity';
 @Entity('classroom')
 export class Classroom {
   @PrimaryGeneratedColumn({ name: 'classroomid' })
@@ -18,4 +18,7 @@ export class Classroom {
 
   @OneToMany(() => StudentClassroom, studentClassroom => studentClassroom.classroom)
   studentClassrooms!: StudentClassroom[];
+
+  @OneToMany(() => Student, (student) => student.classroom)
+  students?: Student[];
 }

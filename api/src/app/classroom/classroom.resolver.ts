@@ -1,7 +1,8 @@
-import { Resolver, Query, Args, ID,Mutation, Int  } from '@nestjs/graphql';
+import { Resolver, Query, Args, ID, Mutation, Int, ResolveField, Parent } from '@nestjs/graphql';
 import { ClassroomType } from './classroom.graphql';
 import { ClassroomService } from './classroom.service';
 import { CreateClassroomInput, UpdateClassroomInput } from './classroom.input';
+import { StudentType } from '../student/student.graphql';
 
 @Resolver(() => ClassroomType)
 export class ClassroomResolver {
@@ -21,6 +22,11 @@ export class ClassroomResolver {
 	async academicYears() {
 			return this.classroomService.findDistinctAcademicYears();
 	}
+	
+	@ResolveField('students', () => [StudentType], { nullable: true })
+	async getStudents(@Parent() classroom: ClassroomType) {
+		return this.classroomService.findStudentsInClassroom(classroom.classroomid);
+	}
 	// Mutation สำหรับเพิ่มห้องเรียน
   @Mutation(() => ClassroomType)
   async createClassroom(@Args('input') input: CreateClassroomInput) {
@@ -37,5 +43,21 @@ export class ClassroomResolver {
   @Mutation(() => ClassroomType)
   async deleteClassroom(@Args('classroomid', { type: () => Int }) classroomid: number) {
     return this.classroomService.delete(classroomid);
+  }
+
+	  @Mutation(() => ClassroomType)
+  async addStudentToClassroom(
+    @Args('classroomid', { type: () => Int }) classroomid: number,
+    @Args('studentid', { type: () => Int }) studentid: number,
+  ) {
+    return this.classroomService.addStudentToClassroom(classroomid, studentid);
+  }
+
+  @Mutation(() => ClassroomType)
+  async removeStudentFromClassroom(
+    @Args('classroomid', { type: () => Int }) classroomid: number,
+    @Args('studentid', { type: () => Int }) studentid: number,
+  ) {
+    return this.classroomService.removeStudentFromClassroom(classroomid, studentid);
   }
 }
