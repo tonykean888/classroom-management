@@ -123,24 +123,35 @@ const StudentManagementPage: React.FC = () => {
 	const [createStudent] = useMutation(CREATE_STUDENT, {
 		onCompleted: () => {
 			message.success('Student added successfully!');
-			fetchStudents({ variables: { search: searchValue, gradelevelid: selectedGradelevel } });
 			setIsModalVisible(false);
 			form.resetFields();
 		},
+		refetchQueries: [{
+			query: GET_STUDENTS,
+			variables: {
+				search: searchValue,
+				gradelevelid: selectedGradelevel
+			},
+  	}],
 	});
 	const [updateStudent] = useMutation(UPDATE_STUDENT, {
 		onCompleted: () => {
 			message.success('Student updated successfully!');
-			fetchStudents({ variables: { search: searchValue, gradelevelid: selectedGradelevel } });
 			setIsModalVisible(false);
 			form.resetFields();
 		},
+		refetchQueries: [{
+			query: GET_STUDENTS,
+			variables: {
+				search: searchValue,
+				gradelevelid: selectedGradelevel
+			},
+  	}],
 	});
   const [deleteStudent] = useMutation(DELETE_STUDENT, {
     onCompleted: (data: any) => {
       if (data && data.deleteStudent === true) {
         message.success('Student deleted successfully!');
-        fetchStudents({ variables: { search: searchValue, gradelevelid: selectedGradelevel } });
       } else {
 				console.warn('Delete returned false or undefined:', data);
         message.error('Failed to delete student');
@@ -150,6 +161,13 @@ const StudentManagementPage: React.FC = () => {
       console.error('Delete mutation error:', error);
       message.error('Error deleting student: ' + error.message);
     },
+		refetchQueries: [{
+			query: GET_STUDENTS,
+			variables: {
+				search: searchValue,
+				gradelevelid: selectedGradelevel,
+			},
+		}],
     update: (cache, { data }, { variables }) => {
       console.log('Update cache after deletion, data:', data, 'variables:', variables);
       if (data && data.deleteStudent) {
@@ -172,7 +190,7 @@ const StudentManagementPage: React.FC = () => {
   useEffect(() => {
     const handler = setTimeout(() => {
       fetchStudents({ variables: { search: searchValue, gradelevelid: selectedGradelevel } });
-    }, 1000); // 1000ms delay
+    }, 800); // 800ms delay
 
     return () => clearTimeout(handler);
   }, [searchValue, selectedGradelevel, fetchStudents]);
@@ -323,8 +341,6 @@ const StudentManagementPage: React.FC = () => {
           Add Student
         </Button>
       </div>
-
-			<Button type="primary" onClick={() => showModal()}>Add Student</Button>
 			<Table dataSource={(studentsData as any)?.students || []} columns={columns} rowKey="studentid" loading={studentsLoading} />
 			<Modal
 				title={editingStudent ? "Edit Student" : "Add Student"}

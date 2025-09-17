@@ -52,6 +52,9 @@ type Mutation {
   createStudent(input: CreateStudentInput!): StudentType!
   updateStudent(input: UpdateStudentInput!): StudentType!
   deleteStudent(studentid: ID!): Boolean!
+  createClassroom(input: CreateClassroomInput!): ClassroomType!
+  updateClassroom(input: UpdateClassroomInput!): ClassroomType!
+  deleteClassroom(classroomid: Int!): ClassroomType!
 }
 
 input CreateStudentInput {
@@ -76,4 +79,17 @@ input UpdateStudentInput {
   birthdate: DateTime
   genderid: Int
   gradelevelid: Int
+}
+
+input CreateClassroomInput {
+  academicyear: String!
+  classroom: String!
+  homeroomTeacher: String!
+}
+
+input UpdateClassroomInput {
+  classroomid: Int!
+  academicyear: String
+  classroom: String
+  homeroomTeacher: String
 }

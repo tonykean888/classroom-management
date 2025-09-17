@@ -28,7 +28,7 @@ export class StudentService {
       .leftJoinAndSelect('student.prefix', 'prefix');
 
     if (search) {
-      query.where('student.firstname LIKE :search OR student.lastname LIKE :search', {
+      query.where('student.studentid LIKE :search OR  student.firstname LIKE :search OR student.lastname LIKE :search', {
         search: `%${search}%`,
       });
     }
