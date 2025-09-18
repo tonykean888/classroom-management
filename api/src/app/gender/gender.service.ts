@@ -7,7 +7,7 @@ import { Gender } from './gender.entity';
 export class GenderService {
   constructor(
     @InjectRepository(Gender)
-    private readonly genderRepository: Repository<Gender>,
+    private readonly genderRepository: Repository<Gender>
   ) {}
 
   async findAll(): Promise<Gender[]> {

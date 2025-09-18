@@ -6,27 +6,27 @@ import { PrefixType } from '../prefix/prefix.graphql';
 import { GraphQLString } from 'graphql';
 @ObjectType('StudentType')
 export class StudentType {
-    @Field(() => Int)
-    studentid!: number;
+  @Field(() => Int)
+  studentid!: number;
 
-    @Field()
-    firstname!: string;
+  @Field()
+  firstname!: string;
 
-    @Field()
-    lastname!: string;
-    
-    @Field(() => GraphQLString)
-    birthdate!: string;
+  @Field()
+  lastname!: string;
 
-    @Field(() => [ClassroomType],{ nullable: true }) 
-    classrooms?: ClassroomType[];
+  @Field(() => GraphQLString)
+  birthdate!: string;
 
-    @Field(() => GradelevelType, { nullable: true })
-    gradelevel?: GradelevelType;
+  @Field(() => [ClassroomType], { nullable: true })
+  classrooms?: ClassroomType[];
 
-    @Field(() => GenderType, { nullable: true })
-    gender?: GenderType;
-    
-    @Field(() => PrefixType, { nullable: true })
-    prefix?: PrefixType;
+  @Field(() => GradelevelType, { nullable: true })
+  gradelevel?: GradelevelType;
+
+  @Field(() => GenderType, { nullable: true })
+  gender?: GenderType;
+
+  @Field(() => PrefixType, { nullable: true })
+  prefix?: PrefixType;
 }

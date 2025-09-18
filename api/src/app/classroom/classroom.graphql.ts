@@ -3,18 +3,18 @@ import { StudentType } from '../student/student.graphql';
 
 @ObjectType()
 export class ClassroomType {
-    @Field(() => ID)
-    classroomid!: number;
+  @Field(() => ID)
+  classroomid!: number;
 
-    @Field()
-    classroom!: string;
+  @Field()
+  classroom!: string;
 
-    @Field()
-    academicyear?: number;
+  @Field()
+  academicyear?: number;
 
-    @Field()
-    homeroomTeacher?: string;
+  @Field()
+  homeroomTeacher?: string;
 
-    @Field(() => [StudentType], { nullable: true })
-    students?: StudentType[];
+  @Field(() => [StudentType], { nullable: true })
+  students?: StudentType[];
 }

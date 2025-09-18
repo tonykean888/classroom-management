@@ -16,7 +16,7 @@ export class CreateClassroomInput {
 export class UpdateClassroomInput {
   @Field(() => Int)
   classroomid!: number;
-  
+
   @Field({ nullable: true })
   academicyear!: string;
 

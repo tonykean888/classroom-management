@@ -7,7 +7,7 @@ import { Gradelevel } from './gradelevel.entity';
 export class GradelevelService {
   constructor(
     @InjectRepository(Gradelevel)
-    private readonly gradelevelRepository: Repository<Gradelevel>,
+    private readonly gradelevelRepository: Repository<Gradelevel>
   ) {}
 
   async findAll(): Promise<Gradelevel[]> {

@@ -6,7 +6,7 @@ import {
   UserOutlined,
   TeamOutlined,
   HomeOutlined,
-  PieChartOutlined
+  PieChartOutlined,
 } from '@ant-design/icons';
 
 const { Title } = Typography;
@@ -89,12 +89,12 @@ const DashboardPage: React.FC = () => {
     if (data) {
       const students = data.students || [];
       const classrooms = data.classrooms || [];
-      
+
       // Count students by gender
       let maleCount = 0;
       let femaleCount = 0;
       let withClassroomCount = 0;
-      
+
       students.forEach((student) => {
         // Count by gender
         if (student.gender && student.gender.gendername === 'ชาย') {
@@ -102,29 +102,32 @@ const DashboardPage: React.FC = () => {
         } else if (student.gender && student.gender.gendername === 'หญิง') {
           femaleCount++;
         }
-        
+
         // Count students with classroom
         if (student.classrooms && student.classrooms.length > 0) {
           withClassroomCount++;
         }
       });
-      
+
       // Count students per classroom
       const classroomStats = classrooms.map((classroom) => {
-        const studentsInClassroom = students.filter((student) => 
-          student.classrooms && 
-          student.classrooms.some((c) => c.classroomid === classroom.classroomid)
+        const studentsInClassroom = students.filter(
+          (student) =>
+            student.classrooms &&
+            student.classrooms.some(
+              (c) => c.classroomid === classroom.classroomid
+            )
         ).length;
-        
+
         return {
           classroomid: classroom.classroomid,
           classroom: classroom.classroom,
           academicyear: classroom.academicyear,
           homeroomTeacher: classroom.homeroomTeacher,
-          studentCount: studentsInClassroom
+          studentCount: studentsInClassroom,
         };
       });
-      
+
       setStats({
         totalStudents: students.length,
         totalClassrooms: classrooms.length,
@@ -132,11 +135,11 @@ const DashboardPage: React.FC = () => {
         studentsWithoutClassroom: students.length - withClassroomCount,
         maleStudents: maleCount,
         femaleStudents: femaleCount,
-        classroomStats
+        classroomStats,
       });
     }
   }, [data]);
-  
+
   const classroomColumns = [
     {
       title: 'ห้องเรียน',
@@ -161,19 +164,33 @@ const DashboardPage: React.FC = () => {
     },
   ];
 
-  if (loading) return <Spin size="large" tip="กำลังโหลดข้อมูล..." style={{ margin: '100px auto', display: 'block' }} />;
-  if (error) return <Alert message={`เกิดข้อผิดพลาด: ${error.message}`} type="error" />;
+  if (loading)
+    return (
+      <Spin
+        size="large"
+        tip="กำลังโหลดข้อมูล..."
+        style={{ margin: '100px auto', display: 'block' }}
+      />
+    );
+  if (error)
+    return <Alert message={`เกิดข้อผิดพลาด: ${error.message}`} type="error" />;
 
   return (
     <div style={{ padding: '20px' }}>
       <Title level={2} style={{ marginBottom: '30px', color: '#1890ff' }}>
         <PieChartOutlined /> รายงานข้อมูลนักเรียน
       </Title>
-      
+
       {/* Main Statistics Cards */}
       <Row gutter={[16, 16]} style={{ marginBottom: '30px' }}>
         <Col xs={24} sm={12} md={6}>
-          <Card bordered={false} style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
+          <Card
+            bordered={false}
+            style={{
+              borderRadius: '10px',
+              boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+            }}
+          >
             <Statistic
               title="นักเรียนทั้งหมด"
               value={stats.totalStudents}
@@ -183,7 +200,13 @@ const DashboardPage: React.FC = () => {
           </Card>
         </Col>
         <Col xs={24} sm={12} md={6}>
-          <Card bordered={false} style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
+          <Card
+            bordered={false}
+            style={{
+              borderRadius: '10px',
+              boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+            }}
+          >
             <Statistic
               title="ห้องเรียนทั้งหมด"
               value={stats.totalClassrooms}
@@ -193,7 +216,13 @@ const DashboardPage: React.FC = () => {
           </Card>
         </Col>
         <Col xs={24} sm={12} md={6}>
-          <Card bordered={false} style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
+          <Card
+            bordered={false}
+            style={{
+              borderRadius: '10px',
+              boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+            }}
+          >
             <Statistic
               title="นักเรียนชาย"
               value={stats.maleStudents}
@@ -203,7 +232,13 @@ const DashboardPage: React.FC = () => {
           </Card>
         </Col>
         <Col xs={24} sm={12} md={6}>
-          <Card bordered={false} style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
+          <Card
+            bordered={false}
+            style={{
+              borderRadius: '10px',
+              boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+            }}
+          >
             <Statistic
               title="นักเรียนหญิง"
               value={stats.femaleStudents}
@@ -213,7 +248,6 @@ const DashboardPage: React.FC = () => {
           </Card>
         </Col>
       </Row>
-      
     </div>
   );
 };

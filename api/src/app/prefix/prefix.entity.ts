@@ -9,6 +9,6 @@ export class Prefix {
   @Column({ name: 'prefixname', length: 10 })
   prefixname!: string;
 
-  @OneToMany(() => Student, student => student.prefix)
+  @OneToMany(() => Student, (student) => student.prefix)
   students!: Student[];
 }

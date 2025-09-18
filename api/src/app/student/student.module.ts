@@ -9,8 +9,17 @@ import { Gradelevel } from '../gradelevel/gradelevel.entity';
 import { Prefix } from '../prefix/prefix.entity';
 import { Gender } from '../gender/gender.entity';
 @Module({
-    imports: [TypeOrmModule.forFeature([Student, StudentClassroom, Classroom, Gradelevel, Prefix, Gender])],
-    providers: [StudentService, StudentResolver],
-    exports: [StudentService],
+  imports: [
+    TypeOrmModule.forFeature([
+      Student,
+      StudentClassroom,
+      Classroom,
+      Gradelevel,
+      Prefix,
+      Gender,
+    ]),
+  ],
+  providers: [StudentService, StudentResolver],
+  exports: [StudentService],
 })
 export class StudentModule {}
