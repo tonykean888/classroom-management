@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Modal, Form, Input, DatePicker, message, Select, Space } from 'antd';
+import { Table, Button, Modal, Form, Input, DatePicker, message, Select, Space ,Spin} from 'antd';
 import { useQuery, useMutation,useLazyQuery } from '@apollo/client/react';
 import { gql } from '@apollo/client';
 import moment from 'moment';
@@ -309,12 +309,12 @@ const StudentManagementPage: React.FC = () => {
 		},
 	];
 
-	if (studentsLoading || gradelevelsLoading || gendersLoading || prefixesLoading) return <p>Loading...</p>;
+	if (studentsLoading || gradelevelsLoading || gendersLoading || prefixesLoading) return <Spin size="large" tip="กำลังโหลดข้อมูล..." style={{ margin: '100px auto', display: 'block' }} />;
 	if (studentsError) return <p>Error : {studentsError.message}</p>;
 
 	return (
 		<div>
-			<h1>Student Management</h1>
+			<h1>จัดการนักเรียน</h1>
 			<div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
 				<Input.Search
           placeholder="Search by name..."

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Table, Button, Modal, Form, Input, message, Select } from 'antd';
+import { Table, Button, Modal, Form, Input, message, Select ,Spin} from 'antd';
 import { useQuery, useMutation } from '@apollo/client/react';
 import { gql } from '@apollo/client';
 const GET_CLASSROOMS = gql`
@@ -157,9 +157,7 @@ const ClassroomManagementPage: React.FC = () => {
       });
     },
     onError: (error) => {
-      // Display error message if the mutation fails
       message.error(`Failed to add student: ${error.message}`);
-      // Refetch data to ensure UI is in sync with server
       refetchStudents();
       refetchAllStudents();
       refetchClassrooms();
@@ -169,11 +167,8 @@ const ClassroomManagementPage: React.FC = () => {
   const [removeStudent] = useMutation(REMOVE_STUDENT_FROM_CLASSROOM, {
     onCompleted: (_data, options: any) => {
       message.success('Student removed from classroom successfully!');
-      
-      // Get the studentId that was removed
+
       const studentId = options?.variables?.studentid;
-      
-      // Update the local state immediately
       if (selectedClassroom && studentId) {
         setSelectedClassroom({
           ...selectedClassroom,
@@ -242,10 +237,8 @@ const ClassroomManagementPage: React.FC = () => {
       const studentToAdd = studentsWithoutClassroomData.studentsWithoutClassroom.find(
         (s) => Number(s.studentid) === Number(studentIdNumber)
       );
-      
-      // Update UI optimistically before the server responds
+
       if (studentToAdd) {
-        // Add student to current students list
         setSelectedClassroom({
           ...selectedClassroom,
           students: [...(selectedClassroom.students || []), studentToAdd]
@@ -267,10 +260,7 @@ const ClassroomManagementPage: React.FC = () => {
     const studentIdNumber = typeof studentid === 'string' ? parseInt(studentid, 10) : studentid;
     
     if (!selectedClassroom) return;
-    
     const classroomIdNumber = parseInt(String(selectedClassroom.classroomid), 10);
-    
-    // Update UI optimistically
     setSelectedClassroom({
       ...selectedClassroom,
       students: (selectedClassroom.students || []).filter(
@@ -288,12 +278,9 @@ const ClassroomManagementPage: React.FC = () => {
 
   // Simple useEffect for search with debounce
   useEffect(() => {
-    // We're using client-side filtering so no need for API calls
-    // Just for UI updates when search value changes
     const handler = setTimeout(() => {
-      // This will trigger a re-render with the filtered classrooms
       console.log("Searching for:", searchValue);
-    }, 300);
+    }, 700);
     
     return () => clearTimeout(handler);
   }, [searchValue]);
@@ -386,12 +373,12 @@ const ClassroomManagementPage: React.FC = () => {
     },
   ];
 
-  if (classroomsLoading) return <p>Loading...</p>;
+  if (classroomsLoading) return <Spin size="large" tip="กำลังโหลดข้อมูล..." style={{ margin: '100px auto', display: 'block' }} />;
   if (classroomsError) return <p>Error : {classroomsError.message}</p>;
 
   return (
     <div>
-      <h1>Classroom Management</h1>
+      <h1>จัดการห้องเรียน</h1>
       <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
         <Input.Search
                 placeholder="Search by name..."
