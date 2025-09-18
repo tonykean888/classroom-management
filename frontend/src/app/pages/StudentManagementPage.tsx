@@ -191,7 +191,6 @@ const StudentManagementPage: React.FC = () => {
     const handler = setTimeout(() => {
       fetchStudents({ variables: { search: searchValue, gradelevelid: selectedGradelevel } });
     }, 800); // 800ms delay
-
     return () => clearTimeout(handler);
   }, [searchValue, selectedGradelevel, fetchStudents]);
 	

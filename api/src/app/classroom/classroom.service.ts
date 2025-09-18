@@ -17,7 +17,7 @@ export class ClassroomService {
 	) {}
 
 	async findAll(): Promise<Classroom[]> {
-			return this.classroomRepository.find();
+		return this.classroomRepository.find();
 	}
 
 	async findOne(classroomid: number): Promise<Classroom|null> {
@@ -146,5 +146,18 @@ export class ClassroomService {
       console.error(`Error finding students in classroom ${classroomid}:`, error);
       return [];
     }
+  }
+
+	async searchClassrooms(
+    searchValue?: string,
+  ): Promise<Classroom[]> {
+		const query = this.classroomRepository.createQueryBuilder('classroom');
+
+		if (searchValue) {
+			query.where('classroom.homeroomTeacher LIKE :search OR classroom.classroom LIKE :search OR classroom.homeroom_teacher LIKE :search', { 
+				search: `%${searchValue}%` 
+			});
+		}
+		return query.getMany();
   }
 }

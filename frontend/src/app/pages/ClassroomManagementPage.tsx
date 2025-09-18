@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Table, Button, Modal, Form, Input, message, Select } from 'antd';
 import { useQuery, useMutation } from '@apollo/client/react';
 import { gql } from '@apollo/client';
-
 const GET_CLASSROOMS = gql`
   query {
-      classrooms{
-        homeroomTeacher
-        classroomid
-        academicyear
-        classroom
-        students {
-          studentid
-          firstname
-          lastname
-        }
+    classrooms {
+      homeroomTeacher
+      classroomid
+      academicyear
+      classroom
+      students {
+        studentid
+        firstname
+        lastname
+      }
     }
   }
 `;
@@ -35,7 +34,8 @@ const UPDATE_CLASSROOM = gql`
   }
 `;
 
-// Mutation สำหรับการลบข้อมูล
+// We'll use client-side filtering instead of a separate query
+
 const DELETE_CLASSROOM = gql`
   mutation DeleteClassroom($classroomid: Int!) {
     deleteClassroom(classroomid: $classroomid) {
@@ -85,7 +85,7 @@ const REMOVE_STUDENT_FROM_CLASSROOM = gql`
 
 const ClassroomManagementPage: React.FC = () => {
 
-  // Define types to help with TypeScript
+
   type Student = {
     studentid: number;
     firstname: string;
@@ -108,19 +108,34 @@ const ClassroomManagementPage: React.FC = () => {
   type AllStudentsData = {
     students: Student[];
   };
-
-  const { data, refetch: refetchClassrooms } = useQuery(GET_CLASSROOMS);
+  
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingClassroom, setEditingClassroom] = useState<Classroom | null>(null);
   const [form] = Form.useForm();
+  const [searchValue, setSearchValue] = useState('');
   const [modal, contextHolder] = Modal.useModal();
   const [isStudentModalVisible, setIsStudentModalVisible] = useState(false);
   const [selectedClassroom, setSelectedClassroom] = useState<Classroom | null>(null);
 
-  const { loading: classroomsLoading, error: classroomsError } = useQuery(GET_CLASSROOMS);
   const { data: studentsWithoutClassroomData, refetch: refetchStudents } = useQuery<StudentsWithoutClassroomData>(GET_STUDENTS_WITHOUT_CLASSROOM);
   const { data: allStudentsData, refetch: refetchAllStudents } = useQuery<AllStudentsData>(GET_ALL_STUDENTS);
+  const { loading: classroomsLoading, data: classroomsData, error: classroomsError, refetch: refetchClassrooms } = useQuery(GET_CLASSROOMS);
   
+  // Client-side filtering for classrooms based on search value
+  const filteredClassrooms = useMemo(() => {
+    if (!classroomsData?.classrooms || !searchValue) {
+      return classroomsData?.classrooms || [];
+    }
+    
+    const searchLower = searchValue.toLowerCase();
+    return classroomsData.classrooms.filter((classroom: any) => 
+      classroom.classroom.toLowerCase().includes(searchLower) || 
+      classroom.homeroomTeacher.toLowerCase().includes(searchLower) ||
+      classroom.classroomid.toString().includes(searchLower)
+    );
+  }, [classroomsData, searchValue]);
+
+
   const [addStudent] = useMutation(ADD_STUDENT_TO_CLASSROOM, {
     onCompleted: () => {
       message.success('Student added to classroom successfully!');
@@ -167,8 +182,6 @@ const ClassroomManagementPage: React.FC = () => {
           )
         });
       }
-      
-      // Also refetch the data to ensure everything is in sync
       refetchClassrooms();
       refetchStudents();
       refetchAllStudents();
@@ -273,6 +286,19 @@ const ClassroomManagementPage: React.FC = () => {
     });
   };
 
+  // Simple useEffect for search with debounce
+  useEffect(() => {
+    // We're using client-side filtering so no need for API calls
+    // Just for UI updates when search value changes
+    const handler = setTimeout(() => {
+      // This will trigger a re-render with the filtered classrooms
+      console.log("Searching for:", searchValue);
+    }, 300);
+    
+    return () => clearTimeout(handler);
+  }, [searchValue]);
+
+
   const showModal = (classroom = null) => {
     setEditingClassroom(classroom);
     if (classroom) {
@@ -293,7 +319,7 @@ const ClassroomManagementPage: React.FC = () => {
       updateClassroom({ 
         variables: { 
           input: { 
-            classroomid: editingClassroom.classroomid, 
+            classroomid: parseInt(editingClassroom.classroomid.toString(), 10), 
             ...values 
           } 
         } 
@@ -366,10 +392,28 @@ const ClassroomManagementPage: React.FC = () => {
   return (
     <div>
       <h1>Classroom Management</h1>
-      <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal()}>
-        Add Classroom
-      </Button>
-      <Table dataSource={(data as any)?.classrooms} columns={columns} rowKey="classroomid" />
+      <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
+        <Input.Search
+                placeholder="Search by name..."
+                onChange={e => setSearchValue(e.target.value)}
+                value={searchValue} // Controlled component: bind value to state
+                style={{ width: 300 }}
+              />
+        <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal()}>
+          Add Classroom
+        </Button>
+      </div>
+
+      <Table 
+        dataSource={
+          searchValue 
+            ? filteredClassrooms
+            : (classroomsData as any)?.classrooms || []
+        } 
+        columns={columns} 
+        rowKey="classroomid" 
+        loading={classroomsLoading}
+      />
 
       <Modal
         title={editingClassroom ? "Edit Classroom" : "Add Classroom"}

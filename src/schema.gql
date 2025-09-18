@@ -44,6 +44,7 @@ type Query {
   classrooms: [ClassroomType!]!
   classroom(classroomid: ID!): ClassroomType!
   academicYears: [Float!]!
+  searchClassrooms(classroomId: Int, classroomName: String, homeroomTeacherName: String): [ClassroomType!]!
   gradelevels: [GradelevelType!]!
   genders: [GenderType!]!
   prefixes: [PrefixType!]!

@@ -49,19 +49,19 @@ export class StudentResolver {
     return this.studentService.findStudentsWithoutClassroom();
   }
 
-	// Mutation สำหรับเพิ่มนักเรียน
+
 	@Mutation(() => StudentType)
 	async createStudent(@Args('input') input: CreateStudentInput) {
 		return this.studentService.create(input);
 	}
 
-	// Mutation สำหรับแก้ไขข้อมูลนักเรียน
+
 	@Mutation(() => StudentType)
 	async updateStudent(@Args('input') input: UpdateStudentInput) {
 		return this.studentService.update(input);
 	}
 
-	// Mutation สำหรับลบข้อมูลนักเรียน
+
 	@Mutation(() => Boolean)
 	async deleteStudent(@Args('studentid', { type: () => ID }) studentid: string): Promise<boolean> {
 		try {

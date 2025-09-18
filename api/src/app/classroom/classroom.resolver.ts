@@ -23,6 +23,22 @@ export class ClassroomResolver {
 			return this.classroomService.findDistinctAcademicYears();
 	}
 	
+	@Query(() => [ClassroomType], { name: 'searchClassrooms' })
+  async searchClassrooms(
+    @Args('classroomId', { type: () => Int, nullable: true })
+    classroomId?: number,
+    @Args('classroomName', { nullable: true })
+    classroomName?: string,
+    @Args('homeroomTeacherName', { nullable: true })
+    homeroomTeacherName?: string,
+  ) {
+    return this.classroomService.searchClassrooms(
+      classroomId,
+      classroomName,
+      homeroomTeacherName,
+    );
+  }
+	
 	@ResolveField('students', () => [StudentType], { nullable: true })
 	async getStudents(@Parent() classroom: ClassroomType) {
 		return this.classroomService.findStudentsInClassroom(classroom.classroomid);
