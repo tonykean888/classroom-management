@@ -3,6 +3,7 @@ import { Prefix } from '../prefix/prefix.entity';
 import { Gender } from '../gender/gender.entity';
 import { Gradelevel } from '../gradelevel/gradelevel.entity';
 import { StudentClassroom } from '../student-classroom/student-classroom.entity';
+import { Classroom } from '../classroom/classroom.entity';
 
 @Entity('student')
 export class Student {
@@ -32,4 +33,8 @@ export class Student {
 
   @OneToMany(() => StudentClassroom, studentClassroom => studentClassroom.student)
   studentClassrooms?: StudentClassroom[];
+
+  @ManyToOne(() => Classroom, (classroom) => classroom.students, { nullable: true })
+  @JoinColumn({ name: 'classroomid' })
+  classroom?: Classroom;
 }

@@ -15,6 +15,6 @@ export class ClassroomType {
     @Field()
     homeroomTeacher?: string;
 
-    @Field(() => [StudentType]) 
+    @Field(() => [StudentType], { nullable: true })
     students?: StudentType[];
 }
