@@ -30,12 +30,19 @@ import { PrefixModule } from './prefix/prefix.module';
         username: configService.get('DB_USER'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [Student, Classroom, Prefix, Gender,Gradelevel, StudentClassroom],
+        entities: [
+          Student,
+          Classroom,
+          Prefix,
+          Gender,
+          Gradelevel,
+          StudentClassroom,
+        ],
         synchronize: configService.get('DB_SYNC'),
       }),
       inject: [ConfigService],
     }),
-     GraphQLModule.forRoot<ApolloDriverConfig>({
+    GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       debug: true,
@@ -49,7 +56,7 @@ import { PrefixModule } from './prefix/prefix.module';
     ClassroomModule,
     GradelevelModule,
     GenderModule,
-    PrefixModule
+    PrefixModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],

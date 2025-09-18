@@ -3,7 +3,7 @@ import { IsOptional, IsInt, IsString, IsDateString } from 'class-validator';
 
 @InputType()
 export class CreateStudentInput {
-@Field(() => Int, { nullable: true })
+  @Field(() => Int, { nullable: true })
   @IsOptional()
   @IsInt()
   prefixid?: number;

@@ -15,8 +15,10 @@ export class Classroom {
   @Column({ name: 'homeroom_teacher', length: 100 })
   homeroomTeacher!: string;
 
-
-  @OneToMany(() => StudentClassroom, studentClassroom => studentClassroom.classroom)
+  @OneToMany(
+    () => StudentClassroom,
+    (studentClassroom) => studentClassroom.classroom
+  )
   studentClassrooms!: StudentClassroom[];
 
   @OneToMany(() => Student, (student) => student.classroom)

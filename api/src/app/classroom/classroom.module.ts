@@ -6,7 +6,10 @@ import { Classroom } from './classroom.entity';
 import { StudentModule } from '../student/student.module';
 import { StudentClassroom } from '../student-classroom/student-classroom.entity';
 @Module({
-  imports: [TypeOrmModule.forFeature([Classroom, StudentClassroom]), StudentModule],
+  imports: [
+    TypeOrmModule.forFeature([Classroom, StudentClassroom]),
+    StudentModule,
+  ],
   providers: [ClassroomService, ClassroomResolver],
 })
 export class ClassroomModule {}

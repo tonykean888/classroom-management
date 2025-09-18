@@ -7,7 +7,7 @@ import { Prefix } from './prefix.entity';
 export class PrefixService {
   constructor(
     @InjectRepository(Prefix)
-    private readonly prefixRepository: Repository<Prefix>,
+    private readonly prefixRepository: Repository<Prefix>
   ) {}
 
   async findAll(): Promise<Prefix[]> {

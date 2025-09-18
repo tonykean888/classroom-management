@@ -24,7 +24,7 @@ const App: React.FC = () => {
           </Route>
         </Routes>
       </Router>
-     </ApolloProvider>
+    </ApolloProvider>
   );
 };
 
