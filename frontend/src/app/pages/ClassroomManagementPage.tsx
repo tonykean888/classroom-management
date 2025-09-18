@@ -345,6 +345,7 @@ const ClassroomManagementPage: React.FC = () => {
         variables: {
           input: {
             classroomid: parseInt(editingClassroom.classroomid.toString(), 10),
+            academicyear: values.academicyear.toString(),
             ...values,
           },
         },
