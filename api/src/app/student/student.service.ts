@@ -21,14 +21,19 @@ export class StudentService {
 
 	) { }
 
-	async findAll(search?: string, gradelevelid?: number): Promise<Student[]> {
+	async findAll(search?: string, gradelevelid?: number, classroomid?: number): Promise<Student[]> {
     const query = this.studentRepository.createQueryBuilder('student')
       .leftJoinAndSelect('student.gradelevel', 'gradelevel')
       .leftJoinAndSelect('student.gender', 'gender')
       .leftJoinAndSelect('student.prefix', 'prefix');
 
+    if (classroomid) {
+      // If classroomId is provided, filter by classroom
+      query.andWhere('student.classroom.classroomid = :classroomid', { classroomid });
+    }
+    
     if (search) {
-      query.where('student.firstname LIKE :search OR student.lastname LIKE :search', {
+      query.where('student.studentid LIKE :search OR  student.firstname LIKE :search OR student.lastname LIKE :search', {
         search: `%${search}%`,
       });
     }
@@ -149,6 +154,25 @@ export class StudentService {
 		return this.studentRepository.save(student);
 	}
 
+  // Method to find students who are not in any classroom
+  async findStudentsWithoutClassroom(): Promise<Student[]> {
+    try {
+      // Get students that don't have a classroom assigned
+      const result = await this.studentRepository
+        .createQueryBuilder('student')
+        .where('student.classroomid IS NULL')
+        .leftJoinAndSelect('student.gender', 'gender')
+        .leftJoinAndSelect('student.prefix', 'prefix')
+        .leftJoinAndSelect('student.gradelevel', 'gradelevel')
+        .getMany();
+        
+      return result;
+    } catch (error) {
+      console.error('Error finding students without classroom:', error);
+      return [];
+    }
+  }
+
   // เมทอดสำหรับลบข้อมูลนักเรียน
   async delete(studentid: number): Promise<boolean> {
     try {
@@ -178,6 +202,9 @@ export class StudentService {
       console.error('Error deleting student:', error);
       return false;
     }
-
 	}
+
+	async save(student: Student): Promise<Student> {
+    return this.studentRepository.save(student);
+  }
 }
