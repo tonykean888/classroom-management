@@ -98,6 +98,7 @@
   "dependencies": {
     "@ant-design/icons": "^6.0.2",
     "@apollo/client": "^4.0.5",
+    "@apollo/server": "^4.12.2",
     "@nestjs/apollo": "^13.1.0",
     "@nestjs/common": "^11.0.0",
     "@nestjs/config": "^4.0.2",
