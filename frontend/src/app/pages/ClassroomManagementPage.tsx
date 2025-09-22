@@ -34,7 +34,6 @@ const UPDATE_CLASSROOM = gql`
   }
 `;
 
-// We'll use client-side filtering instead of a separate query
 
 const DELETE_CLASSROOM = gql`
   mutation DeleteClassroom($classroomid: Int!) {
@@ -133,7 +132,6 @@ const ClassroomManagementPage: React.FC = () => {
     refetch: refetchClassrooms,
   } = useQuery(GET_CLASSROOMS);
 
-  // Client-side filtering for classrooms based on search value
   const filteredClassrooms = useMemo(() => {
     if (!classroomsData?.classrooms || !searchValue) {
       return classroomsData?.classrooms || [];
@@ -252,12 +250,6 @@ const ClassroomManagementPage: React.FC = () => {
       String(selectedClassroom.classroomid),
       10
     );
-    console.log(
-      'Converted IDs - classroom:',
-      classroomIdNumber,
-      'student:',
-      studentIdNumber
-    );
 
     if (
       studentsWithoutClassroomData &&
@@ -276,7 +268,6 @@ const ClassroomManagementPage: React.FC = () => {
       }
     }
 
-    // Send the mutation to the server
     addStudent({
       variables: {
         classroomid: classroomIdNumber,
@@ -346,7 +337,8 @@ const ClassroomManagementPage: React.FC = () => {
           input: {
             classroomid: parseInt(editingClassroom.classroomid.toString(), 10),
             academicyear: values.academicyear.toString(),
-            ...values,
+            classroom: values.classroom.toString(),
+            homeroomTeacher: values.homeroomTeacher.toString(),
           },
         },
       });
@@ -356,8 +348,6 @@ const ClassroomManagementPage: React.FC = () => {
   };
 
   const handleDelete = (classroomid: number) => {
-    console.log('Attempting to delete classroom with ID:', classroomid);
-    console.log(typeof classroomid);
     parseInt(classroomid.toString(), 10);
     modal.confirm({
       title: 'Confirm Deletion',
@@ -434,7 +424,7 @@ const ClassroomManagementPage: React.FC = () => {
         <Input.Search
           placeholder="Search by name..."
           onChange={(e) => setSearchValue(e.target.value)}
-          value={searchValue} // Controlled component: bind value to state
+          value={searchValue} 
           style={{ width: 300 }}
         />
         <Button
